@@ -3,26 +3,7 @@ import { from, Queryable } from '../src';
 import { union } from '../src/helpers';
 import { Predicate } from '../src/signtures';
 import { create, range } from '../src/linq';
-
-/**
- * @abstract
- * @description The basic inetrface to create data to make a test
- */
-interface IFixture{
-    num: number;
-    data: string;
-}
-
-/**
- * @inheritdoc
- */
-interface IFixture2 extends IFixture{
-    support?: true;
-    issue?: string;
-    moment?: Date;
-    num2?: number;
-}
-
+import { IFixture, IFixture2, mockRelations, IRelB, IRelResult } from './IFixture';
 
 describe('TEST the basic functions', () =>{
 
@@ -128,7 +109,7 @@ describe('TEST the basic functions', () =>{
     })
 });
 
-describe('most advanced tests', () => {
+describe('most advanced tests #1', () => {
     // the fixture test data
     const bigObject: IFixture2[] = [
         {
@@ -437,6 +418,27 @@ function fInalTest(fake: IFixture[]) {
             num: 3
         }
     ]);
+
+    describe('most advanced tests #2', () => {
+        // the fixture test data
+        const relations = mockRelations();
+
+        it('show join behavior', () => {
+            const query = new Queryable(relations.a);
+            const join = query.innerJoin(relations.b, (a, b) =>{
+                return a.id === b.tag || b.tag2 === a.id
+            }, (a, b)=>{
+                 const resultJoin: IRelResult = {
+                   id: a.id,
+                   textA: a.text,
+                   textB: b.text
+                }
+                return resultJoin;
+            });
+            // tslint:disable-next-line: no-console
+            console.log(join.toArray());
+        });
+    });
 
     const rule: Predicate<IFixture> = elm => (/^test/.test(elm.data) && elm.num === 2) || elm.num === 3;
     const result = from(mockData)

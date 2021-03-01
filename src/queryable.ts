@@ -238,16 +238,48 @@ import { InteractiveQuery } from './InteractiveQuery';
         });
     }
 
-    join<TOuter, Result>(query: IQueryable<TOuter, QueryableDefaultReturn<TOuter>>, on: (inner?: T, outer?: TOuter) => boolean, result: (inner?: T, outer?: TOuter) => Result | null, behavior?: 'left' | 'right' | 'inner' | 'reset'): IQueryable<Result, QueryableDefaultReturn<Result>> {
-        /*const source = (){
-            for (const current of object) {
-                
-            }
-        }
+    join<TOuter, Result>(query: Iterable<TOuter>,
+        on: (inner: T, outer: TOuter) => boolean,
+        result: (inner: T|null, outer: TOuter|null) => Result, _behavior?: 'left' | 'right' | 'inner'): IQueryable<Result, QueryableDefaultReturn<Result>> {
+        const leftSrc = this;
         return new Queryable({
-            *[Symbol.iterator]: iterable
-        })*/
+           // create an iterator source for join flow
+            * [Symbol.iterator]()  {
+                for (const left of leftSrc) {
+                    for (const right of query) {
+                        const joined = on(left, right);
+                        if(!joined && _behavior === 'left'){
+                            yield result.call(null, left, null);
+                        }else if(!joined && _behavior === 'right'){
+                            yield result.call(null, null, right);
+                        }else if(joined){
+                            yield result.call(null, left, right);
+                        }else{
+                            continue;
+                        }
+                    }
+                }
+            }
+        });
     }
+
+   innerJoin<TOuter, Result>(query: Iterable<TOuter>,
+    on: (inner: T, outer: TOuter) => boolean,
+    result: (inner: T, outer: TOuter) => Result): IQueryable<Result>{
+        return this.join(query, on, result as any, "inner");
+    }
+
+    leftJoin<TOuter, Result>(query: Iterable<TOuter>,
+        on: (inner: T, outer: TOuter) => boolean,
+        result: (inner: T, outer: TOuter|null) => Result|null): IQueryable<Result>{
+            return this.join(query, on, result as any, ";left");
+        }
+
+    rightJoin<TOuter,Result>(query: Iterable<TOuter>,
+        on: (inner: T, outer: TOuter) => boolean,
+        result: (inner: T|null, outer: TOuter) => Result): IQueryable<Result>{
+            return this.join(query, on, result as any, "right");
+        }
 
     export(): IQueryable<T> {
        return clone(this);

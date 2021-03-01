@@ -9,7 +9,7 @@ import {
 } from './signtures';
 
 // simple typing alias
-type JoinBehavior = "left" | "right" | "inner" | "reset";
+type JoinBehavior = "left" | "right" | "inner";
 
 // the basic alias
 export type QueryableDefaultReturn<T> = IQueryable<T>;
@@ -168,17 +168,49 @@ export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T
     /**
      * @method join<TOuter,Result>
      * @param {IQueryable<TOuter>} query The other query with join this
-     * @param {(inner?: T, outer?: TOuter) => boolean} on the function that determine the union
+     * @param {(inner: T, outer?: TOuter) => boolean} on the function that determine the union
      * @param {(inner?: T, outer?: TOuter) => Result|null} result the function that make a result to create a new query joined
      * @param {JoinBehavior} behavior this parameter determine
      * @description make a new join query
      * @return new query with joined result
      */
-    join<TOuter,Result>(
-        query: IQueryable<TOuter>,
-        on: (inner?: T, outer?: TOuter) => boolean,
-        result: (inner?: T, outer?: TOuter) => Result|null,
+    join<TOuter, Result>(
+        query: Iterable<TOuter>,
+        on: (inner: T, outer: TOuter) => boolean,
+        result: (inner: T|null, outer: TOuter|null) => Result,
         behavior?: JoinBehavior): IQueryable<Result>;
+    
+    /**
+    * @method innerJoin
+    * @param query 
+    * @param on 
+    * @param result 
+    */
+    innerJoin<TOuter, Result>(query: Iterable<TOuter>,
+        on: (inner: T, outer: TOuter) => boolean,
+        result: (inner: T, outer: TOuter) => Result): IQueryable<Result>;
+
+    /**
+    * @method leftJoin
+    * @param query 
+    * @param on 
+    * @param result 
+    */
+    leftJoin<TOuter, Result>(query: Iterable<TOuter>,
+        on: (inner: T, outer: TOuter) => boolean,
+        result: (inner: T, outer: TOuter|null) => Result|null): IQueryable<Result>;
+
+
+    /**
+    * @method rightJoin
+    * @param query 
+    * @param on 
+    * @param result 
+    */
+    rightJoin<TOuter,Result>(query: Iterable<TOuter>,
+        on: (inner: T, outer: TOuter) => boolean,
+        result: (inner: T|null, outer: TOuter) => Result): IQueryable<Result>;
+
 
     /**
      * @method export
