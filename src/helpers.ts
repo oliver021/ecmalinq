@@ -78,3 +78,27 @@ export function union<T = any>(...items: Iterable<T>[]): Iterable<T>{
         }
     }
 }
+
+type ResolverCascade<K, T> = (ctx: K, reset: (ctx: K) => void, resolve: (result: T) => void) => void;
+
+/**
+ * @function switchReduce
+ * @param {K} initial the basic initial value
+ * @param {ResolverCascade<K, T>} func the main handler to resolve cascade method
+ * @returns {T} a the resolve value
+ */
+export function switchReduce<T, K>(initial: K, _default:T, func: ResolverCascade<K, T>): T{
+    let currentContext = initial;
+    let result: T = _default;
+    let again: boolean;
+    do{
+        again = false;
+        func.call(null, currentContext, newCtx =>{
+        currentContext = newCtx;
+        again = true;
+        }, value =>{
+            result = value;
+        });
+    } while(again);
+    return result;
+}

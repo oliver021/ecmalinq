@@ -10,3 +10,7 @@ export type Sort<T> = (arg:T, arg2:T) => SortResult;
 export type Reducer<T, K> = (element: T, current: K) => K;
 export type FreeFunc<T> = Func<T,any>;
 export type KeyOrString<T> = keyof T | string;
+export type SortingParameters<T> = {
+    sort: Func<T, any>;
+    desc: boolean;
+};

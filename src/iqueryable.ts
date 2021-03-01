@@ -36,7 +36,7 @@ export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T
      * @argument K the type to filter all elements
      * @description evaluate if the record must be selected, this is a filter
      */
-    ofType<K>(): IQueryable<K>;
+    cast<K>(): IQueryable<K>;
 
     /**
      * @method where

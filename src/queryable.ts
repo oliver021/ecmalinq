@@ -1,3 +1,4 @@
+import clone from "clone";
 import deepEqual from "deep-equal";
 import { IAssertQueryable } from './IAsertQueryable';
 import { IQueryable, QueryableDefaultReturn } from './IQueryable';
@@ -5,11 +6,11 @@ import { IQueryableGroup } from './IQueryableGroup';
 import {
     Predicate, PredeicateIndex, Selector,
     Sort, Reducer, Action, FreeFunc,
-    Func
+    Func,
+    SortingParameters
 } from './signtures';
-import { matchValues, randomNum, union } from './helpers';
+import { matchValues, randomNum, union, switchReduce } from './helpers';
 import { InteractiveQuery } from './InteractiveQuery';
-import clone from "clone";
 
 /**
  * This is the std implementation of IQueryable
@@ -52,13 +53,15 @@ import clone from "clone";
      * @access private
      * @property {PredeicateIndex<T>[]}
      * @default {[]}
+     * @description this rule is base on condition
      */
-    private ordersByValue: {sort:Func<T, any>, desc:boolean}[] = [];
+    private ordersByValue: SortingParameters<T>[] = [];
 
     /**
      * @access private
      * @property {PredeicateIndex<T>[]}
      * @default {[]}
+     * @description funcion to resolve target value to sort records
      */
     private orderByCoparision: Sort<T>[] = [];
 
@@ -110,7 +113,6 @@ import clone from "clone";
     {
         this.source = _source;
     }
-
 
     /**
      * @method create
@@ -221,11 +223,30 @@ import clone from "clone";
     }
 
     distinct(func: FreeFunc<T>): IQueryable<T> {
-        throw new Error('Method not implemented.');
+        const record: any[] = [];
+
+        // add filter to make a distinct rule
+        return this.where(x => {
+            const target = func(x);
+            const result = !record.includes(target);
+            // check if to be in record
+            if(result){
+                // store the record to register value
+                record.push(target);
+            }
+            return result;
+        });
     }
 
     join<TOuter, Result>(query: IQueryable<TOuter, QueryableDefaultReturn<TOuter>>, on: (inner?: T, outer?: TOuter) => boolean, result: (inner?: T, outer?: TOuter) => Result | null, behavior?: 'left' | 'right' | 'inner' | 'reset'): IQueryable<Result, QueryableDefaultReturn<Result>> {
-        throw new Error('Method not implemented.');
+        /*const source = (){
+            for (const current of object) {
+                
+            }
+        }
+        return new Queryable({
+            *[Symbol.iterator]: iterable
+        })*/
     }
 
     export(): IQueryable<T> {
@@ -296,8 +317,8 @@ import clone from "clone";
         return null;
     }
 
-    ofType<K>(): IQueryable<K> {
-        throw new Error('Method not implemented.');
+    cast<K>(): IQueryable<K> {
+        return this as unknown as IQueryable<K>;
     }
 
     whereIf(condition: boolean, evaluate: Predicate<T>): IQueryable<T>;
@@ -487,6 +508,8 @@ import clone from "clone";
     }
 
     toJson(_idented?: boolean): string {
+        // simple implementations
+        // is possible to improve
         return JSON.stringify(this.toArray())
     }
 
@@ -609,14 +632,29 @@ import clone from "clone";
         for (const sort of this.orderByCoparision) {
            sourceArray = sourceArray.sort(sort);
         }
-        for (const rule of this.ordersByValue) {
-            sourceArray = sourceArray.sort((arg1, agr2) =>{
-                const result = rule.desc ? ((rule.sort(arg1) < rule.sort(agr2)) ? 1 : -1) :
-                ((rule.sort(arg1) > rule.sort(agr2)) ? 1 : -1);
 
-                return result;
+        sourceArray = sourceArray.sort((arg1, agr2) => {
+            const rules = this.ordersByValue[Symbol.iterator]();
+            return switchReduce(rules.next(), 0, (ctx, reset, resolve) => {
+                if(ctx.done){
+                    return;
+                }
+                const rule = ctx.value;
+
+                const target1 = rule.sort(arg1);
+                const target2 = rule.sort(agr2);
+
+                // tslint:disable-next-line: strict-comparisons
+                if(target1 === target2){
+                    reset(rules.next());
+                    return;
+                }
+
+                const result = rule.desc ? ((target1 < target2) ? 1 : -1) :
+                ((target1 > target2) ? 1 : -1);
+                resolve(result);
             });
-        }
+        });
         return sourceArray;
     }
 }

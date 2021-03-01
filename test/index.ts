@@ -355,33 +355,67 @@ describe('most advanced tests', () => {
 
     it('32 - test helper filter: "concat"', () =>{
         const query = new Queryable<IFixture2>(bigObject);
-        query.concat([{
+        const result = query.concat([{
             data: "2",
             num: 1
-        }]);
-        assert.equal(query.count(), 6);
+        }]).count();
+        assert.equal(result, 6);
     });
 
     it('33 - test helper: "append"', () =>{
         const query = new Queryable<IFixture2>(bigObject);
-        query.concat([{
+        const result = query.append([{
             data: "2!!",
             num: 1
-        }]);
-        assert.equal(query.first().data, "2!!");
+        }]).first().data;
+        assert.equal(result, "2!!");
     });
 
-    /*it('34 - test helper filter: "toBeRange"', () =>{
+    const sortData: IFixture[] = [
+        {
+            num: 11,
+            data: "ss"
+        },
+        {
+            num: 10,
+            data: "c"
+        },
+        {
+            num: 10,
+            data: "a"
+        },
+        {
+            num: 10,
+            data: "d"
+        }
+    ];
 
+    it('34 - test sorting complex: #1', () =>{
+        const query = new Queryable(sortData);
+        query
+        .orderBy(x => x.num)
+        .orderBy(x => x.data);
+
+        const result = query.toArray();
+        assert.equal(result[0].num, 10);
+        assert.equal(result[0].data, "a");
+        assert.equal(result[1].data, "c");
+        assert.equal(result[2].data, "d");
     })
 
-    it('35 - test helper filter: "toBeRange"', () =>{
+    it('35 -test sorting complex: #2', () =>{
 
     });
 
-    it('36 - test helper filter: "toBeRange"', () =>{
+    it('36 -test sorting complex: #3', () =>{
 
-    });*/
+    });
+
+    it('37 -test method distinct', () =>{
+        const query = new Queryable(bigObject);
+        query.distinct(x => x.num);
+        assert.equal(query.count(), 4);
+    });
 });
 
 /**
