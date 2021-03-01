@@ -1,4 +1,4 @@
-import { IQueryable } from '../test/types/src/iqueryable';
+import { IQueryable } from './IQueryable';
 import { Queryable } from './queryable';
 
 /**
@@ -7,6 +7,14 @@ import { Queryable } from './queryable';
  * @param collection - An array with elements of query
  */
 function from<T>(collection: T[]): IQueryable<T>;
+
+/**
+ * @function form<T>
+ * @description The helper to create a query
+ * @param collection - A set with elements of query
+ */
+// tslint:disable-next-line: unified-signatures
+function from<T>(collection: Set<T>): IQueryable<T>;
 
 /**
  * @function form<T>
@@ -22,7 +30,7 @@ function from<T>(collection: Iterable<T>): IQueryable<T>;
  * @return the query base on generic type of the overload
  */
 function from(elms: any): any{
-    if(Array.isArray(elms)){
+    if(Array.isArray(elms) || elms instanceof Set){
         return new Queryable<any>(elms);
     }else if(typeof elms[Symbol.iterator] === 'function'){
         return new Queryable<any>(elms);
@@ -42,7 +50,19 @@ export { from };
  * @returns {Iterable<number>}
  */
 export function * range(start: number, end: number, product = 1){
-    for (let index = start; index < end; index += product) {
+    for (let index = start; index <= end; index += product) {
         yield index;
     }
+}
+
+/**
+ * @function create<T>
+ * @param {(next: (arg: T) => number)=>void} creator - the basic fucntion that build a new query
+ * by imperative way
+ * @returns a new query
+ */
+export function create<T>(creator: (next: (arg: T) => number)=>void){
+    const storage: T[] = [];
+    creator.call(null, element => storage.push(element));
+    return new Queryable<T>(storage);
 }

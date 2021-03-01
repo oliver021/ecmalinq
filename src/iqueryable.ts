@@ -1,6 +1,7 @@
 import { IAssertQueryable } from './IAsertQueryable';
-import { IQueryableGroup } from './iqueryable-group';
+import { IQueryableGroup } from './IQueryableGroup';
 import { FreeFunc, Func } from './signtures';
+import { InteractiveQuery } from './InteractiveQuery';
 import {
     Predicate, PredeicateIndex,
     Selector, Rtrn, Sort,
@@ -22,12 +23,13 @@ export type QueryableDefaultReturn<T> = IQueryable<T>;
  * The class that implements this interface is a iterable
  * The type argument is a type of elements
  * @abstract
- * @interface IQueryable<T>
+ * @interface IQueryableControl<T,_TFluent>
  * @access public
  * @argument T this argument is the type record
+ * @argument _TFluent this argument is the type return
  * @description the main interface to make queries by linq
  */
-export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> extends Iterable<T>{
+export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T>>{
 
     /**
      * @method ofType
@@ -86,7 +88,15 @@ export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> exte
      * @param {Iterable<K>} range The iterator that provide the range
      * @description evaluate if the record must be selected, match if value to be in range
      */
-    toBeRange<K>(evaluate: Func<T,K>, range: Iterable<K>): _TFluent;
+    toBe<K>(evaluate: Func<T,K>, range: Iterable<K>): _TFluent;
+
+    /**
+     * @method toBeOut
+     * @param evaluate The fucntion that return the value
+     * @param range The iterator that provide the range
+     * @description  evaluate if the record must be out the selected range iterable
+     */
+    toBeOut<K>(evaluate: Func<T, K>, range: Iterable<K>): _TFluent;
 
     /**
      * @method between
@@ -98,6 +108,13 @@ export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> exte
     between<K = number|Date>(evaluate: Func<T,K>, start: K, end: K): _TFluent;
 
     /**
+     * @method exact
+     * @param element
+     * @description this method add a filter that exclude all element to match with target
+     */
+    exact(element: T): _TFluent;
+
+      /**
      * @method match
      * @param element
      * @description this method add a filter that exclude all element to match with target
@@ -105,11 +122,18 @@ export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> exte
     match(element: Partial<T>): _TFluent;
 
     /**
+     * @method not
+     * @param element
+     * @description this method add a filter that exclude all element to match with target
+     */
+    not(element: Partial<T>): _TFluent;
+
+     /**
      * @method exlude
      * @param element
      * @description this method add a filter that exclude all element to match with target
      */
-    exclude(element: Partial<T>): _TFluent;
+    exlude(element: T): _TFluent;
 
     /**
      * @function distinct
@@ -169,7 +193,7 @@ export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> exte
      * @param {Iterable<T>, next: (arg: K) => void) => void) } builder The function to build a new query
      * @returns create a new query base on builder
      */
-    build<K>(builder: (parent: T, next: (arg: K) => void) => void): IQueryable<K>;
+    createWith<K>(filter: Predicate<T>, builder: (parent: T, next: (arg: K) => void) => void): IQueryable<K>;
 
     /**
      * @method fork<K>
@@ -177,7 +201,7 @@ export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> exte
      * @param {Iterable<T>, next: (arg: K) => void) => void) } builder The func to fork
      * @returns create a new query base on fork
      */
-    fork<K>(func: (parent: Iterable<T>, next: (arg: K) => void) => void): IQueryable<K>;
+    create<K>(func: (parent: Iterable<T>, next: (arg: K) => void) => void): IQueryable<K>;
 
     /**
      * @method concat
@@ -185,14 +209,29 @@ export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> exte
      * @description make a union with concat behavior
      * @return an IQueryable concatenated
      */
-    concat(query: IQueryable<T>): _TFluent;
+    concat(query: Iterable<T>): _TFluent;
+
+    /**
+     * @method concat
+     * @param {IQueryable<T>} query The query be will concatenate
+     * @description make a union with concat behavior but on the first the second source
+     * @return an IQueryable concatenated
+     */
+    append(query: Iterable<T>): _TFluent;
 
     /**
      * @method orderBy<K>
      * @param func The fucntion to select the property o value to compare sort
      * @description make a sort comparation
      */
-    orderBy<K>(func: Rtrn<K>): _TFluent;
+    orderBy(func: Func<T,any>): _TFluent;
+
+    /**
+     * @method orderBy<K>
+     * @param func The fucntion to select the property o value to compare sort
+     * @description make a sort comparation
+     */
+    orderByDescending(func: Func<T,any>): _TFluent;
 
     /**
      * @method orderBy<K>
@@ -230,33 +269,6 @@ export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> exte
     assertMode(): IAssertQueryable<T>;
 
     /**
-     * @method any
-     * @description allow know if any element match with query
-     * @return true if any match with query
-     */
-    any(): boolean;
-
-    /**
-     * @method all
-     * @description allow know if all elements match with query
-     * @return true if all match with query
-     */
-    all(): boolean;
-
-    /**
-     * @method contains
-     * @description allow know if any elements match with argument
-     * @return true if any element match with argument
-     */
-    contains(element: T): boolean;
-
-    /**
-     * @method count
-     * @return the number of element that match with query
-     */
-    count(): number;
-
-    /**
      * @method skip
      * @param {number} count the number that element will be skiped
      */
@@ -279,6 +291,54 @@ export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> exte
      * @param {Predicate<T>} count the predicate that determine to take
      */
     takeWhile(count: Predicate<T>): _TFluent;
+}
+
+/**
+ * this intergace contains the main method to resolve or get serveral types of
+ * the results about a query
+ * the inetrface contains all related with results of the query and not modify any state
+ * @abstract
+ * @interface IQueryable
+ * @description the std query interface
+ */
+export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> 
+extends IQueryableControl<T, _TFluent>, Iterable<T>{
+     
+    /**
+     * @method any
+     * @description allow know if any element match with query
+     * @return true if any match with query
+     */
+    any(): boolean;
+
+    /**
+     * @method all
+     * @description allow know if all elements match with query
+     * @return true if all match with query
+     */
+    all(): boolean;
+
+    /**
+     * @method contains
+     * @description allow know if any elements match with argument
+     * @param {T} element The element to match
+     * @return true if any element match with argument
+     */
+    contains(element: T): boolean;
+
+    /**
+     * @method contains
+     * @description allow know if any elements match with argument
+     * @param {Predicate<T>} predicate funtion that test result
+     * @return true if any element match with argument
+     */
+    contains(predicate: Predicate<T>): boolean;
+
+    /**
+     * @method count
+     * @return the number of element that match with query
+     */
+    count(): number;
 
     /**
      * @method first
@@ -309,25 +369,25 @@ export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> exte
      * @return an array of element that match with query
      */
     toArray(): T[];
+    
+    /**
+     * @method toArray
+     * @param { Func<T, K>)} columnSelect the selector of a field to create an array 
+     * @description Create an Array from field selection
+     */
+    toArrayColumn<K>(columnSelect: Func<T, K>): K[];
+
+     /**
+     * @method toJson
+     * @return a string with serialized content
+     */
+    toJson(idented?: boolean): string;
 
     /**
      * @method toSet
      * @return a set of element that match with query
      */
     toSet(): Set<T>;
-
-    /**
-     * @method toStream
-     * @return a stream of element that match with query
-     */
-    toStream(): ReadableStream<T>;
-
-    /**
-     * @method toStream<K>
-     * @description convert the element that match with query by async fucntion
-     * @return a stream of element that match with query
-     */
-    toStream<K>(conversion: Selector<T, Promise<K>>): ReadableStream<T>;
 
     /**
      * @method toMap
@@ -344,17 +404,18 @@ export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> exte
     forEach(action: Action<T>): void;
 
     /**
-     * @function fork
-     * @description make a fork to query, where the match element is separated
-     */
-    // fork<TStrcuture = [],R1 = any, R2 = any>(first: (arg: R1) => T, second: (arg: T) => R2): [TStrcuture<R1>, R2];
-
-    /**
-     * @fucntion poll
+     * @method poll
      * @description make a evaluation to resolve the result element in the query
      * @param evaluator the basic function that return an evaluation result
      * @param forMax determine if the reesult is grather or less
      * @returns element with the best result
      */
     poll(evaluator: (arg: T) => number, forMax?: boolean): T|null;
+
+    /**
+     * @method toInteractive
+     * @description create an interactive query with result of the query
+     * @returns a new interactive query instance
+     */
+    toInteractive(): InteractiveQuery<T>;
 }
