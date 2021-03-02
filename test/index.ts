@@ -423,9 +423,11 @@ function fInalTest(fake: IFixture[]) {
         // the fixture test data
         const relations = mockRelations();
 
+        // simple log by console to debug results
         it('show join behavior', () => {
             const query = new Queryable(relations.a);
             const join = query.innerJoin(relations.b, (a, b) =>{
+                // this is a rule to make an join operation
                 return a.id === b.tag || b.tag2 === a.id
             }, (a, b)=>{
                  const resultJoin: IRelResult = {
@@ -435,6 +437,7 @@ function fInalTest(fake: IFixture[]) {
                 }
                 return resultJoin;
             });
+
             // tslint:disable-next-line: no-console
             console.log(join.toArray());
         });

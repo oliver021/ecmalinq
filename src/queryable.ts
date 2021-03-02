@@ -241,11 +241,13 @@ import { InteractiveQuery } from './InteractiveQuery';
     join<TOuter, Result>(query: Iterable<TOuter>,
         on: (inner: T, outer: TOuter) => boolean,
         result: (inner: T|null, outer: TOuter|null) => Result, _behavior?: 'left' | 'right' | 'inner'): IQueryable<Result, QueryableDefaultReturn<Result>> {
+        // create a reference of this source
         const leftSrc = this;
         return new Queryable({
            // create an iterator source for join flow
             * [Symbol.iterator]()  {
                 for (const left of leftSrc) {
+                    // iterate for second source
                     for (const right of query) {
                         const joined = on(left, right);
                         if(!joined && _behavior === 'left'){
@@ -255,6 +257,8 @@ import { InteractiveQuery } from './InteractiveQuery';
                         }else if(joined){
                             yield result.call(null, left, right);
                         }else{
+                            // if any case is match then continue
+                            // that is only in "inner behavior"
                             continue;
                         }
                     }
@@ -266,18 +270,21 @@ import { InteractiveQuery } from './InteractiveQuery';
    innerJoin<TOuter, Result>(query: Iterable<TOuter>,
     on: (inner: T, outer: TOuter) => boolean,
     result: (inner: T, outer: TOuter) => Result): IQueryable<Result>{
+        // set behavior "inner"
         return this.join(query, on, result as any, "inner");
     }
 
     leftJoin<TOuter, Result>(query: Iterable<TOuter>,
         on: (inner: T, outer: TOuter) => boolean,
         result: (inner: T, outer: TOuter|null) => Result|null): IQueryable<Result>{
-            return this.join(query, on, result as any, ";left");
+            // set behavior "left"
+            return this.join(query, on, result as any, "left");
         }
 
     rightJoin<TOuter,Result>(query: Iterable<TOuter>,
         on: (inner: T, outer: TOuter) => boolean,
         result: (inner: T|null, outer: TOuter) => Result): IQueryable<Result>{
+            // set behavior "right"
             return this.join(query, on, result as any, "right");
         }
 
@@ -427,6 +434,7 @@ import { InteractiveQuery } from './InteractiveQuery';
         for (const _ of this) {
            return true;
         }
+        // if any iteration is executed then any element is matched
         return false;
     }
 
@@ -480,7 +488,7 @@ import { InteractiveQuery } from './InteractiveQuery';
     }
 
     toArray(): T[] {
-       return Array.from(this);
+       return Array.from(this); // it's easy
     }
 
     toArrayColumn<K>(columnSelect: Func<T, K>): K[] {
@@ -520,6 +528,7 @@ import { InteractiveQuery } from './InteractiveQuery';
         let result: T|null = null;
         let record: number = 0;
         let initial = true;
+        // iterate by this source
         for (const current of this) {
             const evluation = evaluator(current);
             if(initial){
@@ -528,9 +537,11 @@ import { InteractiveQuery } from './InteractiveQuery';
                 initial = false;
                 continue;
             }
+            // resolve by major case
             if(forMax && evluation > record){
                 result = current;
                 record = evluation;
+                // if forMax is false then is evaluated
             }else if(!forMax && evluation < record){
                 result = current;
                 record = evluation;
@@ -553,7 +564,7 @@ import { InteractiveQuery } from './InteractiveQuery';
     * [Symbol.iterator](): Iterator<T, any, undefined> {
          // simples vars
          const hasSort = this.hasSortsRule();
-         const hub: T[] = [];
+         const hub: T[] = []; // when has sort rules need store the results
          let skipped = 0;
          let takeElms = 0;
 
@@ -584,6 +595,7 @@ import { InteractiveQuery } from './InteractiveQuery';
              if(!pass){
                  continue;
              }else{
+                 // update record for element taked
                  takeElms++;
              }
 
@@ -609,6 +621,7 @@ import { InteractiveQuery } from './InteractiveQuery';
         // if is sorted
         if(hasSort && hub.length > 0){
             for (const data of this.applySorts(hub)) {
+                // flush the stored elements
                 yield data;
             }
         }
@@ -633,8 +646,8 @@ import { InteractiveQuery } from './InteractiveQuery';
         const filters = this.whereClosures.concat(
             // this is a good way to concat both rules to filter
             this.whereConditionClosures
-            .filter(w => w._con)
-            .map(w => w._predi)
+            .filter(w => w._con) // if is included
+            .map(w => w._predi) // take just the predicate
         );
 
         // invoke the filter above current element
@@ -660,13 +673,35 @@ import { InteractiveQuery } from './InteractiveQuery';
      * @returns {Iterable<T>}
      */
     private applySorts(current: Iterable<T>): Iterable<T>{
-        let sourceArray = Array.from(current);
-        for (const sort of this.orderByCoparision) {
-           sourceArray = sourceArray.sort(sort);
-        }
+        /*
+            - using array API "sort" to make a sorting process
+            - the source is converted to array by "from"
+        */
+        return Array.from(current).sort((arg1, agr2) => {
+            /*
+                - In this method you have two way to make a sorting
+                - two with diffents effect and priority
+                - the first is base in custom and imperative way
+                - second is by value comparision using the "<" or ">"
+                - using the zero result to keep deep in rest of rules
+            */
+            // first rules "custom" where you can set your own sorts algorith
+            const customRules = this.orderByCoparision[Symbol.iterator]();
+            let customRule = customRules.next();
+            while(!customRule.done){
+                const resultOfCustomSort = customRule.value.call(null, arg1, agr2);
+                if(resultOfCustomSort === 0){
+                    customRule = customRules.next();
+                    continue;
+                }else{
+                    return resultOfCustomSort;
+                }
+            }
 
-        sourceArray = sourceArray.sort((arg1, agr2) => {
+            // second rules for sorting base on values
             const rules = this.ordersByValue[Symbol.iterator]();
+            // using the custom helper to resolve the complex flow
+            // to make a sorting with miltiple rules
             return switchReduce(rules.next(), 0, (ctx, reset, resolve) => {
                 if(ctx.done){
                     return;
@@ -687,6 +722,5 @@ import { InteractiveQuery } from './InteractiveQuery';
                 resolve(result);
             });
         });
-        return sourceArray;
     }
 }

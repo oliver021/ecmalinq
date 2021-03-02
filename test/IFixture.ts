@@ -59,12 +59,12 @@ export function mockRelations(): RelResult {
             {
                 tag: 2,
                 tag2: 5,
-                text: 'this is binder #1'
+                text: 'this is binder #2'
             },
             {
                 tag: 3,
                 tag2: 3,
-                text: 'this is binder #1'
+                text: 'this is binder #3'
             },
         ]
     }

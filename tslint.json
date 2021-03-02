@@ -4,6 +4,9 @@
         "tslint:recommended"
     ],
     "jsRules": {},
+    "linterOptions":{
+      "exclude": ["./examples/**", "./test", "./types"]
+    },
     "rules": {
         "no-namespace": true,
         "only-arrow-functions": false,
