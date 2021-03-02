@@ -13,7 +13,9 @@ Con linqscript tienes una posibilidad ilimitada de crear flujos de consultas com
 Este trabajo inspirado en la robusta implementación de .Net Standard, posee un vasto conjunto métodos
 que veremos mas adelante, como nos facilitara el trabajo con arreglos, collaciones, mapas y cualquier objeto iterable en JavaScript.
 
-## Prerequisitos
+El *propsito de linq* es facilitar el trabajo con colleciones, registros y cualquier estructura o tipo de dato que sea iterable, a diferencia de sql, donde trabajamos con consultas esticas, aqui podemos lograr muchos resultados dinamicos en tiempo de ejecucion. La tarea de trabajar con datos, como el minado, la extracion, conversion, tratamiento y clasificacion se facilita mucho con esta poderosa herramienta. 
+
+## Requisitos
 
 Esta biblioteca apenas tiene requerimientos relevantes a mencionar basta con
 [Node](http://nodejs.org/) y [NPM](https://npmjs.org/) para una instalacion de 5 segundos
@@ -29,16 +31,16 @@ Si todo sale bien, ya puedes incorporar esta biblioteca a tu proyecto
 ## Tabla de contenidos
 
 - [LinqScript](#linqscript)
-  - [Requisitos](#prerequisites)
-  - [Tabla de contenidos](#table-of-contents)
-  - [Empezar](#getting-started)
-  - [Instalacion](#installation)
-  - [Uso](#usage)
-    - [Simple consulta](#serving-the-app)
-    - [El metodo select](#running-the-tests)
-    - [Metodo para concoer resultados](#building-a-distribution-version)
-    - [Ordenar resultados](#building-a-distribution-version)
-    - [Las consultas son iterables](#serving-the-distribution-version)
+  - [Requisitos](#Requisitos)
+  - [Tabla de contenidos](#tabla-de-contenidos)
+  - [Empezar](#empezar)
+  - [Instalacion](#instalacion)
+  - [Uso](#uso)
+    - [Simple consulta](#simple-consultap)
+    - [El metodo select](#el-metodo-select)
+    - [Metodo para conocer resultados](#metodos-para-conocer-resultados)
+    - [Ordenar resultados](#ordenar-resultados)
+    - [Las consultas son iterables](#las-consultas-son-iterables)
     - ["Limites y desplazamiento"](#limites-y-desplazamiento)
   - [Running the tests](#running-the-tests)
   - [Contributing](#contributing)
