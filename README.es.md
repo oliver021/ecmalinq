@@ -185,6 +185,7 @@ const result = from(users)
 // show the result
 console.log(result); // expected [1, 2, 12, 18] array witd id values
 ```
+
 El método "select" es de cierto modo análogo al metodo "map()" del prototipo de los `Array` en JavaScript, porque transforma el resultado de consulta y básicamente devuelve una nueva consultas con los filtros y reglas anteriores, pero con un nuevo tipo como argumento de la consulta.
 
 ### Metodo para conocer resultados

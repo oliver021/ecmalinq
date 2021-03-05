@@ -1,45 +1,45 @@
-import { KeyOrString } from './signtures';
 import { IQueryable } from './IQueryable';
+import { KeyOrString } from './signtures';
 
 /**
  * @abstract
  * @interface IAsertControl
  */
-export interface IAssertControl<TRecord>{
+export interface IAsertControl<TRecord>{
     /**
      * @param  {KeyOrString<TRecord>} key
      * @param  {any} value
      * @returns IAssertQueryable
      */
-    equal(key: KeyOrString<TRecord>, value: any): IAssertQueryable<TRecord>;
+    equal(key: KeyOrString<TRecord>, value: any): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @param  {number} value
      * @returns IAssertQueryable
      */
-    greather(key: KeyOrString<TRecord>, value: number): IAssertQueryable<TRecord>;
+    greather(key: KeyOrString<TRecord>, value: number): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @param  {number} value
      * @returns IAssertQueryable
      */
-    greatherEqual(key: KeyOrString<TRecord>, value: number): IAssertQueryable<TRecord>;
+    greatherEqual(key: KeyOrString<TRecord>, value: number): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @param  {number} value
      * @returns IAssertQueryable
      */
-    less(key: KeyOrString<TRecord>, value: number): IAssertQueryable<TRecord>;
+    less(key: KeyOrString<TRecord>, value: number): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @param  {number} value
      * @returns IAssertQueryable
      */
-    lessEqual(key: KeyOrString<TRecord>, value: number): IAssertQueryable<TRecord>;
+    lessEqual(key: KeyOrString<TRecord>, value: number): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
@@ -47,97 +47,97 @@ export interface IAssertControl<TRecord>{
      * @param  {number} end
      * @returns IAssertQueryable
      */
-    betweenAt(key: KeyOrString<TRecord>, start: number, end: number): IAssertQueryable<TRecord>;
+    betweenAt(key: KeyOrString<TRecord>, start: number, end: number): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @param  {any[]} ...value
      * @returns IAssertQueryable
      */
-    in(key: KeyOrString<TRecord>, ...value: any[]): IAssertQueryable<TRecord>;
+    in(key: KeyOrString<TRecord>, ...value: any[]): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @param  {string|RegExp} expression
      * @returns IAssertQueryable
      */
-    regex(key: KeyOrString<TRecord>, expression: string | RegExp): IAssertQueryable<TRecord>;
+    regex(key: KeyOrString<TRecord>, expression: string | RegExp): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @param  {KeyOrString<TRecord>} key2
      * @returns IAssertQueryable
      */
-    same(key: KeyOrString<TRecord>, key2: KeyOrString<TRecord>):  IAssertQueryable<TRecord>;
+    same(key: KeyOrString<TRecord>, key2: KeyOrString<TRecord>): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @returns IAssertQueryable
      */
-    isArray(key: KeyOrString<TRecord>):  IAssertQueryable<TRecord>;
+    isArray(key: KeyOrString<TRecord>): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @returns IAssertQueryable
      */
-    isFunction(key: KeyOrString<TRecord>):  IAssertQueryable<TRecord>;
+    isFunction(key: KeyOrString<TRecord>): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @returns IAssertQueryable
      */
-    isObject(key: KeyOrString<TRecord>):  IAssertQueryable<TRecord>;
+    isObject(key: KeyOrString<TRecord>): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @returns IAssertQueryable
      */
-    isString(key: KeyOrString<TRecord>):  IAssertQueryable<TRecord>;
+    isString(key: KeyOrString<TRecord>): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @returns IAssertQueryable
      */
-    isNumber(key: KeyOrString<TRecord>):  IAssertQueryable<TRecord>;
+    isNumber(key: KeyOrString<TRecord>): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @returns IAssertQueryable
      */
-    isDate(key: KeyOrString<TRecord>):  IAssertQueryable<TRecord>;
+    isDate(key: KeyOrString<TRecord>): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @returns IAssertQueryable
      */
-    isTrue(key: KeyOrString<TRecord>):  IAssertQueryable<TRecord>;
+    isTrue(key: KeyOrString<TRecord>): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @returns IAssertQueryable
      */
-    isFalse(key: KeyOrString<TRecord>):  IAssertQueryable<TRecord>;
-
-    /**
-     * @param  {KeyOrString<TRecord>} key
-     * @param  {Date|number|string} date
-     * @returns IAssertQueryable
-     */
-    isToday(key: KeyOrString<TRecord>, date: Date|number|string):  IAssertQueryable<TRecord>;
+    isFalse(key: KeyOrString<TRecord>): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @param  {Date|number|string} date
      * @returns IAssertQueryable
      */
-    beforeAt(key: KeyOrString<TRecord>, date: Date|number|string):  IAssertQueryable<TRecord>;
+    isToday(key: KeyOrString<TRecord>, date: Date|number|string): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
      * @param  {Date|number|string} date
      * @returns IAssertQueryable
      */
-    afterAt(key: KeyOrString<TRecord>, date: Date|number|string):  IAssertQueryable<TRecord>;
+    beforeAt(key: KeyOrString<TRecord>, date: Date|number|string): this;
+
+    /**
+     * @param  {KeyOrString<TRecord>} key
+     * @param  {Date|number|string} date
+     * @returns IAssertQueryable
+     */
+    afterAt(key: KeyOrString<TRecord>, date: Date|number|string): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
@@ -145,7 +145,7 @@ export interface IAssertControl<TRecord>{
      * @param  {number} seconds
      * @returns IAssertQueryable
      */
-    ago(key: KeyOrString<TRecord>, date: Date|number|string, seconds: number):  IAssertQueryable<TRecord>;
+    ago(key: KeyOrString<TRecord>, date: Date|number|string, seconds: number): this;
 
     /**
      * @param  {KeyOrString<TRecord>} key
@@ -156,7 +156,7 @@ export interface IAssertControl<TRecord>{
     agoOne(
      key: KeyOrString<TRecord>,
      date: Date|number|string,
-     mesure: "second"|"minute"|"hour"|"day"|"week"): IAssertQueryable<TRecord>;
+     mesure: "second"|"minute"|"hour"|"day"|"week"): this;
 }
 
 /**
@@ -167,6 +167,6 @@ export interface IAssertControl<TRecord>{
  * @interface IAssertQueryable<TRecord>
  * @description The query with assert feature that allow filter with dynamic key name
  */
-export interface IAssertQueryable<TRecord>
-extends Omit<IQueryable<TRecord, IAssertQueryable<TRecord>>, "assertMode">, IAssertControl<TRecord>{
+export interface IAsertQueryable<TRecord>
+extends Omit<IQueryable<TRecord>, "assertMode">, IAsertControl<TRecord>{
 }
