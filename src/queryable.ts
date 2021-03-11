@@ -346,12 +346,13 @@ import { InteractiveQuery } from './InteractiveQuery';
             return null;
         }
         const limit = randomNum(0, max);
-        const index = 0;
+        let index = 0;
         for (const current of this) {
             // this loop determine that element is selected by random
             if(index >= limit){
                 return current;
             }
+            index++;
         }
         return null;
     }
