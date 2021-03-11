@@ -1,6 +1,6 @@
 import clone from "clone";
 import deepEqual from "deep-equal";
-import { IAssertQueryable } from './IAsertQueryable';
+import { IAssertQueryable } from './IAssertQueryable';
 import { IQueryable, QueryableDefaultReturn } from './IQueryable';
 import { IQueryableGroup } from './IQueryableGroup';
 import {

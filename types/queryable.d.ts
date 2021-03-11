@@ -1,4 +1,4 @@
-import { IAssertQueryable } from './IAsertQueryable';
+import { IAssertQueryable } from './IAssertQueryable';
 import { IQueryable, QueryableDefaultReturn } from './IQueryable';
 import { IQueryableGroup } from './IQueryableGroup';
 import { Predicate, PredeicateIndex, Selector, Sort, Reducer, Action, FreeFunc, Func } from './signtures';
