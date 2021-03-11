@@ -2,7 +2,7 @@
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-#LinqScript
+# LinqScript
 
 This library is a powerful framework for creating very flexible and powerfully query objects.
 semantics thanks to Typescript typing, where we use a fluent API to add various types
@@ -13,7 +13,7 @@ With linqscript you have an unlimited possibility to create complex query flows,
 This work, inspired by the robust implementation of .Net Standard, has a vast set of methods
 that we will see later, how it will facilitate the work with arrangements, collations, maps and any iterable object in JavaScript.
 
-The *purpose of linq* is to make it easier to work with collections, records and any structure or data type that is iterable, unlike sql, where we work with static queries, here we can achieve many dynamic results at runtime. The task of working with data such as mining, extraction, conversion, treatment and classification is made much easier with this powerful tool.
+The *purpose of linq* is to make it easier to work with **collections**, **records** and any structure or data type that is **iterable**, unlike sql, where we work with static queries, here we can achieve many dynamic results at runtime. The task of working with data such as mining, extraction, conversion, treatment and classification is made much easier with this powerful tool.
 
 ## Requirements
 
@@ -43,6 +43,7 @@ If everything goes well, you can now incorporate this library into your project
     - [Method to know results](#methods-to-know-results)
     - [Sort results](#sort-results)
     - [Queries are iterable](#queries-are-iterable)
+    - [The 'create()' helper](#the-'create()'-helper)
     - ["Limits and displacement"](#limits-and-displacement)
   - [Running the tests](#running-the-tests)
   - [Contributing](#contributing)
@@ -192,8 +193,8 @@ console.log(result); // expected [1, 2, 12, 18] array witd id values
 The "select" method is somewhat analogous to the "map ()" method of the `Array` prototype in JavaScript, because it transforms the query result and basically returns a new query with the previous filters and rules, but with a new type as the query argument.
 
 ### Method to know results
-Below I list some of the methods of survey results.
 
+Below I list some of the methods of survey results.
 
 ```ts
 const myQuery = from(data).where(x => /*my filter*/);
@@ -261,8 +262,31 @@ use the latest features that modern Javascript will give us, such as the for-of 
 for example:
 
 ```ts
+import { from } from "linqscript";
+
 const result = from(users).where(x => x.group !== "a"); // exclude all user with group "a"
 
+for (const element of result) {
+  console.log("debug element:", element);
+}
+
+```
+
+### The 'create()' helper
+
+```ts
+import { create } from "linqscript";
+
+ const query = create(next =>{
+            next(1);
+            next(1);
+            next(2);
+        });
+
+// three times the next is invoked then the count() is 3
+console.log(query.count());
+
+// show result: 1, 1, 2
 for (const element of result) {
   console.log("debug element:", element);
 }

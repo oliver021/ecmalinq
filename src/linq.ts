@@ -57,12 +57,26 @@ export function * range(start: number, end: number, product = 1){
 
 /**
  * @function create<T>
- * @param {(next: (arg: T) => number)=>void} creator - the basic fucntion that build a new query
+ * @param {(next: (arg: T) => number)=>void} creator - the basic function that build a new query
  * by imperative way
+ * @description helper to create a query by impertive process
  * @returns a new query
  */
-export function create<T>(creator: (next: (arg: T) => number)=>void){
+export function create<T>(creator: (next: (arg: T) => number) => void){
     const storage: T[] = [];
     creator.call(null, element => storage.push(element));
+    return new Queryable<T>(storage);
+}
+
+/**
+ * @function createAsync<T>
+ * @param {(next: (arg: T) => number)=>void} creator - the basic fucntion that build a new query
+ * by imperative way
+ *  @description helper to create a query by impertive process with asyncronous function
+ * @returns a new query
+ */
+export async function createAsync<T, TRes>(creator: (next: (arg: T) => number) => Promise<TRes>){
+    const storage: T[] = [];
+    await creator.call(null, element => storage.push(element));
     return new Queryable<T>(storage);
 }

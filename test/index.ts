@@ -1,9 +1,9 @@
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
 import { from, Queryable } from '../src';
 import { union } from '../src/helpers';
 import { Predicate } from '../src/signtures';
-import { create, range } from '../src/linq';
-import { IFixture, IFixture2, mockRelations, IRelB, IRelResult } from './IFixture';
+import { create, createAsync, range } from '../src/linq';
+import { IFixture, IFixture2, mockRelations, IRelResult } from './IFixture';
 
 describe('TEST the basic functions', () =>{
 
@@ -68,7 +68,8 @@ describe('TEST the basic functions', () =>{
     it('6 - test method: "poll"', ()=>{
         const query = new Queryable<IFixture>(fake);
         const result = query.poll(x => x.num); // simple test for evaluations
-        assert.equal(result.data, "hello");
+        assert.isNotNull(result);
+        expect((result as IFixture).data).to.equal("hello");
     });
 
     it('7 - test method: "fork"', ()=>{
@@ -133,7 +134,7 @@ describe('most advanced tests #1', () => {
         },
         {
             num: 2,
-            data: null,
+            data: "null",
             "issue": "is null"
         }
     ];
@@ -153,8 +154,9 @@ describe('most advanced tests #1', () => {
     it('12 - test helper filter: "isNull"', () =>{
         const query = new Queryable<IFixture2>(bigObject);
         query.isNull(x => x.data);
-        assert.equal(query.count(), 1, "fail filter is null");
-        assert.equal(query.first().issue, "is null", "fail filter is null");
+        // any element in data is null
+        assert.equal(query.count(), 0, "fail filter is null");
+        // assert.equal(query.first().issue, "is null", "fail filter is null");
     });
 
     it('13 - test helper filter: "notNull" and method "all"', () =>{
@@ -293,7 +295,7 @@ describe('most advanced tests #1', () => {
     it('25 - test helper: "exported"', () =>{
         const query = new Queryable<IFixture2>(bigObject);
         const queryExported = query.export();
-        query.where(x => false); // that means any element is match
+        query.where(() => false); // that means any element is match
         assert.isTrue(queryExported.any());
     });
 
@@ -384,18 +386,45 @@ describe('most advanced tests #1', () => {
         assert.equal(result[2].data, "d");
     })
 
-    it('35 -test sorting complex: #2', () =>{
+    it('35 -test \'create()\' helper', () =>{
+        const query = create(next =>{
+            next(1);
+            next(1);
+            next(2);
+        });
 
+        // three times the next is invoked then the count() is 3
+        expect(query.count()).to.equal(3);
     });
 
-    it('36 -test sorting complex: #3', () =>{
-
-    });
-
-    it('37 -test method distinct', () =>{
+    it('36 -test method distinct', () =>{
         const query = new Queryable(bigObject);
         query.distinct(x => x.num);
         assert.equal(query.count(), 4);
+    });
+
+    it('test extra method to test helper ', () => {
+        assert.throw(() =>{
+            from(11 as any);
+        }, Error);
+    });
+
+    it('test async create helper', async () =>{
+        const simplePromise = new Promise((res) =>{
+            setTimeout(() => {
+                res(2);
+            }, 10);
+        });
+        const query = await createAsync( async next =>{
+            const firstV = await simplePromise;
+            next(firstV);
+            next(1);
+            next(2);
+        });
+
+        // three times the next is invoked then the count() is 3
+        expect(query.count()).to.equal(3);
+        expect(query.first()).to.equal(2);
     });
 });
 
