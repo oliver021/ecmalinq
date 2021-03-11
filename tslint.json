@@ -8,6 +8,7 @@
       "exclude": ["./examples/**", "./test", "./types"]
     },
     "rules": {
+        "unified-signatures":false,
         "no-namespace": true,
         "only-arrow-functions": false,
         "no-parameter-reassignment": true,
@@ -21,7 +22,10 @@
         "arrow-return-shorthand": true,
         "binary-expression-operand-order": true,
         "class-name": true,
-        "file-name-casing": true,
+        "file-name-casing": [
+          false,
+          "camel-case"
+        ],
         "static-this": true,
         "member-ordering": [
             true,
