@@ -167,6 +167,6 @@ export interface IAsertControl<TRecord>{
  * @interface IAssertQueryable<TRecord>
  * @description The query with assert feature that allow filter with dynamic key name
  */
-export interface IAsertQueryable<TRecord>
+export interface IAssertQueryable<TRecord>
 extends Omit<IQueryable<TRecord>, "assertMode">, IAsertControl<TRecord>{
 }
