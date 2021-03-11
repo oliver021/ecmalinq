@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.42% </span>
+                <span class="strong">89.47% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>26/38</span>
+                <span class='fraction'>34/38</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>5/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">88.89% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>6/9</span>
+                <span class='fraction'>8/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.57% </span>
+                <span class="strong">89.19% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/37</span>
+                <span class='fraction'>33/37</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -168,7 +168,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">56x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -190,14 +190,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -224,8 +224,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -270,8 +270,8 @@
  * @param {number} max max to resolve random number
  * @return a new random number calculated by function
  */
-export function <span class="fstat-no" title="function not covered" >randomNum(</span>min: number, max: number): number {
-<span class="cstat-no" title="statement not covered" >    return Math.random() * (max - min) + min;</span>
+export function randomNum(min: number, max: number): number {
+    return Math.random() * (max - min) + min;
 }
 &nbsp;
 /**
@@ -292,15 +292,15 @@ export function * <span class="fstat-no" title="function not covered" >toIterato
  * @param {Iterator&lt;T, any, undefined&gt;} data the target data as iterator
  * @returns new Iterator
  */
-export function <span class="fstat-no" title="function not covered" >toArray&lt;</span>T&gt;(data: Iterator&lt;T, any, undefined&gt;): T[]{
-    const result: T[] = <span class="cstat-no" title="statement not covered" >[];</span>
-    let current = <span class="cstat-no" title="statement not covered" >data.next();</span>
+export function toArray&lt;T&gt;(data: Iterator&lt;T, any, undefined&gt;): T[]{
+    const result: T[] = [];
+    let current = data.next();
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    while(current.done === false){</span>
-<span class="cstat-no" title="statement not covered" >        result.push(current.value);</span>
-<span class="cstat-no" title="statement not covered" >        current = data.next();</span>
+    while(current.done === false){
+        result.push(current.value);
+        current = data.next();
     }
-<span class="cstat-no" title="statement not covered" >    return result;</span>
+    return result;
 }
 &nbsp;
 /**
@@ -327,8 +327,8 @@ export function matchValues&lt;T extends {[key:string]:any}&gt;(target: T, check
  */
 export function union&lt;T = any&gt;(...items: Iterable&lt;T&gt;[]): Iterable&lt;T&gt;{
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if(items.length &lt; 2){
-<span class="cstat-no" title="statement not covered" >        throw new Error("union is not necesary, require more than one source");</span>
+    if(items.length &lt; 2){
+        throw new Error("union is not necesary, require more than one source");
     }
 &nbsp;
     return {
@@ -373,7 +373,7 @@ export function switchReduce&lt;T, K&gt;(initial: K, _default:T, func: ResolverC
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Mar 11 2021 12:47:54 GMT-0500 (hora estándar oriental)
+                at Thu Mar 11 2021 13:29:39 GMT-0500 (hora estándar oriental)
             </div>
         </div>
         <script src="prettify.js"></script>
