@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
 import { from, Queryable } from '../src';
-import { union } from '../src/helpers';
+import { union, randomNum, toArray } from '../src/helpers';
 import { Predicate } from '../src/signtures';
 import { create, createAsync, range } from '../src/linq';
 import { IFixture, IFixture2, mockRelations, IRelResult } from './IFixture';
@@ -403,10 +403,28 @@ describe('most advanced tests #1', () => {
         assert.equal(query.count(), 4);
     });
 
-    it('test extra method to test helper ', () => {
+    it('test extra method to cover trivial code ', () => {
         assert.throw(() =>{
             from(11 as any);
         }, Error);
+
+        assert.throw(() =>{
+            union([1,2,444]);
+        }, Error);
+
+        assert.doesNotThrow(() =>{
+            for (let index = 0; index < 55; index++) {
+                const totalMax = index + 60;
+                const result = randomNum(2, totalMax);
+                if(result < 2 || result > totalMax){
+                    throw new Error();
+                }
+            }
+        });
+
+        assert.isArray(toArray(new Queryable(bigObject)[Symbol.iterator]()));
+
+        
     });
 
     it('test async create helper', async () =>{
