@@ -511,7 +511,7 @@ import { InteractiveQuery } from './InteractiveQuery';
     toMap(mapper: (arg: T) => [string, T]): Map<string,T> {
         const map = new Map<string,T>();
         for (const current of this) {
-           const [key,value] = mapper(current);
+           const [key, value] = mapper(current);
             map.set(key, value);
         }
         return map;
