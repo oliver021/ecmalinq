@@ -1,4 +1,4 @@
-import { IAsertQueryable } from './IAsertQueryable';
+import { IAssertQueryable } from './IAsertQueryable';
 import { IQueryableGroup } from './IQueryableGroup';
 import { FreeFunc, Func } from './signtures';
 import { InteractiveQuery } from './InteractiveQuery';
@@ -13,7 +13,6 @@ type JoinBehavior = "left" | "right" | "inner";
 
 // the basic alias
 export type QueryableDefaultReturn<T> = IQueryable<T>;
-
 
 /**
  * This interface is the principal contracts for all artifact of linq script
@@ -263,16 +262,14 @@ export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T
      * @param func The fucntion to select the property o value to compare sort
      * @description make a sort comparation
      */
-    orderByDescending(func: Func<T,any>): _TFluent;
+    orderBy(func: Sort<T>): _TFluent;
 
     /**
      * @method orderBy<K>
      * @param func The fucntion to select the property o value to compare sort
      * @description make a sort comparation
      */
-    // tslint:disable-next-line: adjacent-overload-signatures
-    // tslint:disable-next-line: unified-signatures
-    orderBy(func: Sort<T>): _TFluent;
+    orderByDescending(func: Func<T,any>): _TFluent;
 
     /**
      * @method reverse
@@ -300,7 +297,7 @@ export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T
      * @description convert the query to has support to make assets
      * @return a new query with asserts
      */
-    assertMode(): IAsertQueryable<T>;
+    assertMode(): IAssertQueryable<T>;
 
     /**
      * @method skip
