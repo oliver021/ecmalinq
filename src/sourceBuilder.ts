@@ -46,7 +46,7 @@ export class SourceBuilder<TRecord>{
      * @description dispatch the queries by the accumulate sources or records
      */
     commit(){
-        this.actions.forEach(run => run.call(null, new Queryable(this.source), this.emitter));
+        this.actions.forEach(run => run.call(null, new Queryable(this.source), /*this.emitter*/null as any));
     }
 
     /**
@@ -63,6 +63,6 @@ export class SourceBuilder<TRecord>{
     }
 
     // tslint:disable-next-line: no-empty
-    private emitter(ev: string){
-    }
+   /* private emitter(ev: string){
+    }*/
 }

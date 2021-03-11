@@ -1,245 +1,293 @@
-## Template explanation
-
-This repository is a template that can be used through github to start your projects with typescript faster, offering basic and useful things in advance, it includes dependencies for test systems, lint for the quality of the code, a clean folder structure, everything needed to get started with Typescript
-
-> **Note:** This first section of the readme can be removed, it is only an explanation, the template this file begins below
-
 [![npm version](https://badge.fury.io/js/angular2-expandable-list.svg)](https://badge.fury.io/js/angular2-expandable-list)
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-# Project Name
+#LinqScript
 
-> Write a project description
+This library is a powerful framework for creating very flexible and powerfully query objects.
+semantics thanks to Typescript typing, where we use a fluent API to add various types
+of filters to our queries, ordering rules, groupings, unions and various ways of obtaining results and conducting surveys to said queries.
 
-## Prerequisites
+With linqscript you have an unlimited possibility to create complex query flows, filter iterable objects, sort them, convert or reproduce them, paginate the results, very similar to how SQL standards work.
 
-This project requires NodeJS (version 8 or later) and NPM.
-[Node](http://nodejs.org/) and [NPM](https://npmjs.org/) are really easy to install.
+This work, inspired by the robust implementation of .Net Standard, has a vast set of methods
+that we will see later, how it will facilitate the work with arrangements, collations, maps and any iterable object in JavaScript.
+
+The *purpose of linq* is to make it easier to work with collections, records and any structure or data type that is iterable, unlike sql, where we work with static queries, here we can achieve many dynamic results at runtime. The task of working with data such as mining, extraction, conversion, treatment and classification is made much easier with this powerful tool.
+
+## Requirements
+
+This library has hardly any relevant requirements to mention, just
+[Node] (http://nodejs.org/) and [NPM] (https://npmjs.org/) for a 5 second install
 To make sure you have them available on your machine,
-try running the following command.
+
+Try using these commands:
 
 ```sh
 $ npm -v && node -v
 6.4.1
 v8.16.0
 ```
+If everything goes well, you can now incorporate this library into your project
 
-## Table of contents
+## Table of Contents
 
-- [Project Name](#project-name)
-  - [Prerequisites](#prerequisites)
+- [LinqScript](#linqscript)
+  - [Requirements](#Requirements)
   - [Table of contents](#table-of-contents)
-  - [Getting Started](#getting-started)
+  - [Start](#start)
   - [Installation](#installation)
-  - [Usage](#usage)
-    - [Serving the app](#serving-the-app)
-    - [Running the tests](#running-the-tests)
-    - [Building a distribution version](#building-a-distribution-version)
-    - [Serving the distribution version](#serving-the-distribution-version)
-  - [API](#api)
-    - [useBasicFetch](#usebasicfetch)
-      - [Options](#options)
-    - [fetchData](#fetchdata)
+  - [Use](#use)
+    - [Simple query](#simple-query)
+    - [The select method](#the-select-method)
+    - [Method to know results](#methods-to-know-results)
+    - [Sort results](#sort-results)
+    - [Queries are iterable](#queries-are-iterable)
+    - ["Limits and displacement"](#limits-and-displacement)
+  - [Running the tests](#running-the-tests)
   - [Contributing](#contributing)
-  - [Credits](#credits)
-  - [Built With](#built-with)
   - [Versioning](#versioning)
   - [Authors](#authors)
   - [License](#license)
 
-## Getting Started
+## Begin
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+To start working with linqscript you just have to install the package in its official npm repo
+with installation commands
 
 ## Installation
 
-**BEFORE YOU INSTALL:** please read the [prerequisites](#prerequisites)
+**Before Installing:** please read [prerequisites](#prerequisites)
 
-Start with cloning this repo on your local machine:
+To install the library run the command:
 
-```sh
-$ git clone https://github.com/ORG/PROJECT.git
-$ cd PROJECT
-```
-
-To install and set up the library, run:
 
 ```sh
-$ npm install -S myLib
+$ npm install -S linqscript
 ```
 
-Or if you prefer using Yarn:
+or to if you use Yarn:
 
 ```sh
-$ yarn add --dev myLib
+$ yarn add --dev linqscript
+```
+## Use
+
+### Simple query
+
+We are going to start with a simple query where we have a data type of which we have an array
+which would be a record that we could well obtain from a database, rest api or any other service, so let's see that interface in Typescript:
+
+```ts
+type User = {
+    id: number,
+    username: string,
+    group: string,
+    data?: string,
+    followers: number,
+    login?: Date
+};
 ```
 
-## Usage
+Note that this interface has several fields where data of our interest are contained, for example if we want to know which users belong to group "a", we can execute the following example code.
 
-### Serving the app
+```ts
+import { from } from "linqscript";
 
-```sh
-$ npm start
+type User = {
+    id: number,
+    username: string,
+    group: string,
+    data?: string,
+    followers: number,
+    login?: Date
+};
+
+const users: User[] = [
+    {
+        id: 1,
+        username: "john",
+        followers: 100,
+        group: "a"
+    },
+    {
+        id: 2,
+        username: "charles",
+        followers: 140,
+        group: "d"
+    },
+    {
+        id: 12,
+        username: "victor",
+        followers: 400,
+        group: "c"
+    },{
+        id: 18,
+        username: "tony",
+        followers: 25,
+        group: "a"
+    }
+];
+
+const result = from(users).where(x => x.group === "a").count();
+
+// show the result
+console.log(result); // expected 2
 ```
 
-### Running the tests
+We are going to highlight several things, here we are importing a very simple function "from (iterable)",
+which acts as a factory, which is to receive any iterable JavaScript object, using the typing and autocompletion features of any IDE, we have access to an improved query design experience. Then this works, it will return an `IQueryable <T>`, which is the essential interface of this library, through which we establish filters, rules, operations and surveys of various types. The "where (predicate)" method adds filters to get the results we need. Finally, after adding the filter we proceed to survey the results for which we have a large number of methods and possibilities. In this case we use "count ()" which is analogous to the length of the arrays and strings, and this returns the number of records that the query brings up.
+
+### The select method
+
+Let's look at the following code to understand how select works:
+
+
+```ts
+import { from } from "linqscript";
+
+type User = {
+    id: number,
+    username: string,
+    group: string,
+    data?: string,
+    followers: number,
+    login?: Date
+};
+
+const users: User[] = [
+    {
+        id: 1,
+        username: "john",
+        followers: 100,
+        group: "a"
+    },
+    {
+        id: 2,
+        username: "charles",
+        followers: 140,
+        group: "d"
+    },
+    {
+        id: 12,
+        username: "victor",
+        followers: 400,
+        group: "c"
+    },{
+        id: 18,
+        username: "tony",
+        followers: 25,
+        group: "a"
+    }
+];
+
+const result = from(users)
+              .where(x => x.group === "a")
+              .select(x => x.id);
+
+// show the result
+console.log(result); // expected [1, 2, 12, 18] array witd id values
+```
+
+The "select" method is somewhat analogous to the "map ()" method of the `Array` prototype in JavaScript, because it transforms the query result and basically returns a new query with the previous filters and rules, but with a new type as the query argument.
+
+### Method to know results
+Below I list some of the methods of survey results.
+
+
+```ts
+const myQuery = from(data).where(x => /*my filter*/);
+
+myQuery.first(); // the first result
+myQuery.last(); // the last element
+myQuery.any(); // return true if any result is match
+myQuery.all(); // return true if all result is match
+myQuery.contains(); // require an argument, a fucntion that return a
+// condition and return true if exist an element with this condition
+myQuery.toArray(); // get an array with query elements
+myQuery.toSet(); // an Set instance with results
+myQuery.toJson(); // a json string ready to send by http or write on a file
+// and more...
+```
+
+
+### Sort Results
+
+
+```ts
+let result = from(users)
+              .where(x => x.group === "a")
+              .orderBy(x => x.followers);
+
+// show the result
+console.log(result.first()); // expected {
+//       id: 1,
+//       username: "tony",
+//       followers: 25,
+//       group: "a"
+//}
+// user with less followers
+
+let result = from(users)
+              .orderByDecending(x => x.followers);
+
+// show the result
+console.log(result.first()); // expected {
+//       id: 1,
+//       username: "victor",
+//       followers: 400,
+//       group: "c"
+//}
+// user with more followers
+
+// sort with custom algorith
+let result = from(users)
+              .orderBy((elm1, elm2) => elm2.username.length < elm1.username.length);
+
+// show the result
+console.log(result.first()); // expected {
+//       id: 1,
+//       username: "charles",
+//       followers: 140,
+//       group: "d"
+//}
+// user with more followers
+```
+
+### Queries are iterable
+
+Any query that we create, in addition to the survey methods, we have the possibility
+use the latest features that modern Javascript will give us, such as the for-of loop,
+for example:
+
+```ts
+const result = from(users).where(x => x.group !== "a"); // exclude all user with group "a"
+
+for (const element of result) {
+  console.log("debug element:", element);
+}
+
+```
+
+### Limits and displacement
+
+``` ts
+const query = new from (users);
+         query.skip (1);
+         query.take (1);
+
+console.log (query.count ()); // the value is one
+```
+Limit and offset are used to create results pages and create complex query rules.
+Both methods are simple, they only require the number to limit or move as an argument, "skip" moves and "take" limits the results.
+
+```
+## Running the tests
 
 ```sh
 $ npm test
 ```
-
-### Building a distribution version
-
-```sh
-$ npm run build
-```
-
-This task will create a distribution version of the project
-inside your local `dist/` folder
-
-### Serving the distribution version
-
-```sh
-$ npm run serve:dist
-```
-
-This will use `lite-server` for servign your already
-generated distribution version of the project.
-
-*Note* this requires
-[Building a distribution version](#building-a-distribution-version) first.
-
-## API
-
-### useBasicFetch
-
-```js
-useBasicFetch(url: string = '', delay: number = 0)
-```
-
-Supported options and result fields for the `useBasicFetch` hook are listed below.
-
-#### Options
-
-`url`
-
-| Type | Default value |
-| --- | --- |
-| string | '' |
-
-If present, the request will be performed as soon as the component is mounted
-
-Example:
-
-```tsx
-const MyComponent: React.FC = () => {
-  const { data, error, loading } = useBasicFetch('https://api.icndb.com/jokes/random');
-
-  if (error) {
-    return <p>Error</p>;
-  }
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  return (
-    <div className="App">
-      <h2>Chuck Norris Joke of the day</h2>
-      {data && data.value && <p>{data.value.joke}</p>}
-    </div>
-  );
-};
-```
-
-`delay`
-
-| Type | Default value | Description |
-| --- | --- | --- |
-| number | 0 | Time in milliseconds |
-
-If present, the request will be delayed by the given amount of time
-
-Example:
-
-```tsx
-type Joke = {
-  value: {
-    id: number;
-    joke: string;
-  };
-};
-
-const MyComponent: React.FC = () => {
-  const { data, error, loading } = useBasicFetch<Joke>('https://api.icndb.com/jokes/random', 2000);
-
-  if (error) {
-    return <p>Error</p>;
-  }
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  return (
-    <div className="App">
-      <h2>Chuck Norris Joke of the day</h2>
-      {data && data.value && <p>{data.value.joke}</p>}
-    </div>
-  );
-};
-```
-
-### fetchData
-
-```js
-fetchData(url: string)
-```
-
-Perform an asynchronous http request against a given url
-
-```tsx
-type Joke = {
-  value: {
-    id: number;
-    joke: string;
-  };
-};
-
-const ChuckNorrisJokes: React.FC = () => {
-  const { data, fetchData, error, loading } = useBasicFetch<Joke>();
-  const [jokeId, setJokeId] = useState(1);
-
-  useEffect(() => {
-    fetchData(`https://api.icndb.com/jokes/${jokeId}`);
-  }, [jokeId, fetchData]);
-
-  const handleNext = () => setJokeId(jokeId + 1);
-
-  if (error) {
-    return <p>Error</p>;
-  }
-
-  const jokeData = data && data.value;
-
-  return (
-    <div className="Comments">
-      {loading && <p>Loading...</p>}
-      {!loading && jokeData && (
-        <div>
-          <p>Joke ID: {jokeData.id}</p>
-          <p>{jokeData.joke}</p>
-        </div>
-      )}
-      {!loading && jokeData && !jokeData.joke && <p>{jokeData}</p>}
-      <button disabled={loading} onClick={handleNext}>
-        Next Joke
-      </button>
-    </div>
-  );
-};
-```
+En los test encontraremos muchisimo pero muchismo ejemplos de usos acerca de esta biblioteca.
 
 ## Contributing
 
@@ -252,27 +300,16 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 5.  Push to the branch: `git push origin my-new-feature`
 6.  Submit a pull request :sunglasses:
 
-## Credits
-
-TODO: Write credits
-
-## Built With
-
-* Dropwizard - Bla bla bla
-* Maven - Maybe
-* Atom - ergaerga
-* Love
-
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
 
 ## Authors
 
-* **John Doe** - *Initial work* - [JohnDoe](https://github.com/JohnDoe)
+* **Oliver Valiente** - [Oliver Valiente](https://github.com/oliver021)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## License
 
-[MIT License](https://andreasonny.mit-license.org/2019) © Andrea SonnY
+[MIT License](https://andreasonny.mit-license.org/2019) © Oliver Valiente

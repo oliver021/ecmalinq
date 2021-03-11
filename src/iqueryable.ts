@@ -14,7 +14,6 @@ type JoinBehavior = "left" | "right" | "inner";
 // the basic alias
 export type QueryableDefaultReturn<T> = IQueryable<T>;
 
-
 /**
  * This interface is the principal contracts for all artifact of linq script
  * Through this interface you can implement the query engine
@@ -114,7 +113,7 @@ export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T
      */
     exact(element: T): _TFluent;
 
-      /**
+    /**
      * @method match
      * @param element
      * @description this method add a filter that exclude all element to match with target
@@ -128,7 +127,7 @@ export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T
      */
     not(element: Partial<T>): _TFluent;
 
-     /**
+    /**
      * @method exlude
      * @param element
      * @description this method add a filter that exclude all element to match with target
@@ -179,33 +178,33 @@ export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T
         on: (inner: T, outer: TOuter) => boolean,
         result: (inner: T|null, outer: TOuter|null) => Result,
         behavior?: JoinBehavior): IQueryable<Result>;
-    
-    /**
+
+   /**
     * @method innerJoin
-    * @param query 
-    * @param on 
-    * @param result 
+    * @param query
+    * @param on
+    * @param result
     */
     innerJoin<TOuter, Result>(query: Iterable<TOuter>,
         on: (inner: T, outer: TOuter) => boolean,
         result: (inner: T, outer: TOuter) => Result): IQueryable<Result>;
 
-    /**
+   /**
     * @method leftJoin
-    * @param query 
-    * @param on 
-    * @param result 
+    * @param query
+    * @param on
+    * @param result
     */
     leftJoin<TOuter, Result>(query: Iterable<TOuter>,
         on: (inner: T, outer: TOuter) => boolean,
         result: (inner: T, outer: TOuter|null) => Result|null): IQueryable<Result>;
 
 
-    /**
+   /**
     * @method rightJoin
-    * @param query 
-    * @param on 
-    * @param result 
+    * @param query
+    * @param on
+    * @param result
     */
     rightJoin<TOuter,Result>(query: Iterable<TOuter>,
         on: (inner: T, outer: TOuter) => boolean,
@@ -263,14 +262,14 @@ export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T
      * @param func The fucntion to select the property o value to compare sort
      * @description make a sort comparation
      */
-    orderByDescending(func: Func<T,any>): _TFluent;
+    orderBy(func: Sort<T>): _TFluent;
 
     /**
      * @method orderBy<K>
      * @param func The fucntion to select the property o value to compare sort
      * @description make a sort comparation
      */
-    orderBy(func: Sort<T>): _TFluent;
+    orderByDescending(func: Func<T,any>): _TFluent;
 
     /**
      * @method reverse
@@ -333,9 +332,9 @@ export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T
  * @interface IQueryable
  * @description the std query interface
  */
-export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>> 
-extends IQueryableControl<T, _TFluent>, Iterable<T>{
-     
+export interface IQueryable<T = any, _TFluent =  QueryableDefaultReturn<T>>
+extends IQueryableControl<T, _TFluent>, Iterable<T>
+{
     /**
      * @method any
      * @description allow know if any element match with query
@@ -364,6 +363,7 @@ extends IQueryableControl<T, _TFluent>, Iterable<T>{
      * @param {Predicate<T>} predicate funtion that test result
      * @return true if any element match with argument
      */
+    // tslint:disable-next-line: unified-signatures
     contains(predicate: Predicate<T>): boolean;
 
     /**
@@ -401,15 +401,15 @@ extends IQueryableControl<T, _TFluent>, Iterable<T>{
      * @return an array of element that match with query
      */
     toArray(): T[];
-    
+
     /**
      * @method toArray
-     * @param { Func<T, K>)} columnSelect the selector of a field to create an array 
+     * @param { Func<T, K>)} columnSelect the selector of a field to create an array
      * @description Create an Array from field selection
      */
     toArrayColumn<K>(columnSelect: Func<T, K>): K[];
 
-     /**
+    /**
      * @method toJson
      * @return a string with serialized content
      */

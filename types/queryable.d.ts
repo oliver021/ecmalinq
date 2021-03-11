@@ -30,7 +30,10 @@ export declare class Queryable<T> implements IQueryable<T> {
     exlude(element: T): QueryableDefaultReturn<T>;
     match(element: Partial<T>): IQueryable<T>;
     distinct(func: FreeFunc<T>): IQueryable<T>;
-    join<TOuter, Result>(query: IQueryable<TOuter, QueryableDefaultReturn<TOuter>>, on: (inner?: T, outer?: TOuter) => boolean, result: (inner?: T, outer?: TOuter) => Result | null, behavior?: 'left' | 'right' | 'inner' | 'reset'): IQueryable<Result, QueryableDefaultReturn<Result>>;
+    join<TOuter, Result>(query: Iterable<TOuter>, on: (inner: T, outer: TOuter) => boolean, result: (inner: T | null, outer: TOuter | null) => Result, _behavior?: 'left' | 'right' | 'inner'): IQueryable<Result, QueryableDefaultReturn<Result>>;
+    innerJoin<TOuter, Result>(query: Iterable<TOuter>, on: (inner: T, outer: TOuter) => boolean, result: (inner: T, outer: TOuter) => Result): IQueryable<Result>;
+    leftJoin<TOuter, Result>(query: Iterable<TOuter>, on: (inner: T, outer: TOuter) => boolean, result: (inner: T, outer: TOuter | null) => Result | null): IQueryable<Result>;
+    rightJoin<TOuter, Result>(query: Iterable<TOuter>, on: (inner: T, outer: TOuter) => boolean, result: (inner: T | null, outer: TOuter) => Result): IQueryable<Result>;
     export(): IQueryable<T>;
     createWith<K>(filter: Predicate<T>, builder: (element: T, next: (arg: K) => void) => void): IQueryable<K, QueryableDefaultReturn<K>>;
     assertMode(): IAssertQueryable<T>;

@@ -3,7 +3,7 @@ import { IQueryableGroup } from './IQueryableGroup';
 import { FreeFunc, Func } from './signtures';
 import { InteractiveQuery } from './InteractiveQuery';
 import { Predicate, PredeicateIndex, Selector, Rtrn, Sort, Reducer, Action } from './signtures';
-declare type JoinBehavior = "left" | "right" | "inner" | "reset";
+declare type JoinBehavior = "left" | "right" | "inner";
 export declare type QueryableDefaultReturn<T> = IQueryable<T>;
 export interface IQueryableControl<T = any, _TFluent = QueryableDefaultReturn<T>> {
     cast<K>(): IQueryable<K>;
@@ -24,7 +24,10 @@ export interface IQueryableControl<T = any, _TFluent = QueryableDefaultReturn<T>
     whereIf(condition: boolean, evaluate: Predicate<T>): _TFluent;
     whereIf(condition: boolean, evaluate: PredeicateIndex<T>): _TFluent;
     select<K>(map: Selector<T, K>): IQueryable<K>;
-    join<TOuter, Result>(query: IQueryable<TOuter>, on: (inner?: T, outer?: TOuter) => boolean, result: (inner?: T, outer?: TOuter) => Result | null, behavior?: JoinBehavior): IQueryable<Result>;
+    join<TOuter, Result>(query: Iterable<TOuter>, on: (inner: T, outer: TOuter) => boolean, result: (inner: T | null, outer: TOuter | null) => Result, behavior?: JoinBehavior): IQueryable<Result>;
+    innerJoin<TOuter, Result>(query: Iterable<TOuter>, on: (inner: T, outer: TOuter) => boolean, result: (inner: T, outer: TOuter) => Result): IQueryable<Result>;
+    leftJoin<TOuter, Result>(query: Iterable<TOuter>, on: (inner: T, outer: TOuter) => boolean, result: (inner: T, outer: TOuter | null) => Result | null): IQueryable<Result>;
+    rightJoin<TOuter, Result>(query: Iterable<TOuter>, on: (inner: T, outer: TOuter) => boolean, result: (inner: T | null, outer: TOuter) => Result): IQueryable<Result>;
     export(): _TFluent;
     createWith<K>(filter: Predicate<T>, builder: (parent: T, next: (arg: K) => void) => void): IQueryable<K>;
     create<K>(func: (parent: Iterable<T>, next: (arg: K) => void) => void): IQueryable<K>;
