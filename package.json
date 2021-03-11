@@ -1,6 +1,6 @@
 {
   "name": "linqscript",
-  "version": "1.1.5",
+  "version": "1.2.5",
   "description": "The complete and awesome linq api for javascript/typescript",
   "main": "lib/index.js",
   "typings": "types/index.d.ts",
