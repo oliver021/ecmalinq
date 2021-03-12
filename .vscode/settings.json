@@ -1,0 +1,18 @@
+{
+    "mocha.coverage": {
+        "enable": true,
+        "decoration": true,
+        "runWithInterval": false,
+        "autoUpdateInterval": 20000,
+        "activeOnStart": true,
+        "runAfterTest": false,
+        "runCoverageAfterFileSave": false,
+        "reporters": [
+            "spec"
+        ]
+    },
+    "mocha.files.glob": "test/**/*.ts",
+    "mocha.requires": [
+        "ts-node/register"
+    ],
+}

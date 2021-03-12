@@ -1,4 +1,4 @@
-import { IAssertQueryable } from './IAsertQueryable';
+import { IAssertQueryable } from './IAssertQueryable';
 import { IQueryableGroup } from './IQueryableGroup';
 import { FreeFunc, Func } from './signtures';
 import { InteractiveQuery } from './InteractiveQuery';

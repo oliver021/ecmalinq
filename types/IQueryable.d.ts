@@ -1,4 +1,4 @@
-import { IAssertQueryable } from './IAsertQueryable';
+import { IAssertQueryable } from './IAssertQueryable';
 import { IQueryableGroup } from './IQueryableGroup';
 import { FreeFunc, Func } from './signtures';
 import { InteractiveQuery } from './InteractiveQuery';
@@ -34,8 +34,8 @@ export interface IQueryableControl<T = any, _TFluent = QueryableDefaultReturn<T>
     concat(query: Iterable<T>): _TFluent;
     append(query: Iterable<T>): _TFluent;
     orderBy(func: Func<T, any>): _TFluent;
-    orderByDescending(func: Func<T, any>): _TFluent;
     orderBy(func: Sort<T>): _TFluent;
+    orderByDescending(func: Func<T, any>): _TFluent;
     reverse(): _TFluent;
     groupBy<K>(func: Rtrn<K>): IQueryableGroup<K, T>;
     agregate<K>(func: Reducer<T, K>, initial: K | null): K | null;
