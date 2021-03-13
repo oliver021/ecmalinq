@@ -9,3 +9,6 @@ package-lock.json
 /coverage/
 /images/
 .nyc_output
+.nycrc
+tslint.json
+tsconfig.json

@@ -2,13 +2,13 @@
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-# LinqScript
+# ECMALinq
 
 This library is a powerful framework for creating very flexible and powerfully query objects.
 semantics thanks to Typescript typing, where we use a fluent API to add various types
 of filters to our queries, ordering rules, groupings, unions and various ways of obtaining results and conducting surveys to said queries.
 
-With linqscript you have an unlimited possibility to create complex query flows, filter iterable objects, sort them, convert or reproduce them, paginate the results, very similar to how SQL standards work.
+With ecmascript you have an unlimited possibility to create complex query flows, filter iterable objects, sort them, convert or reproduce them, paginate the results, very similar to how SQL standards work.
 
 This work, inspired by the robust implementation of .Net Standard, has a vast set of methods
 that we will see later, how it will facilitate the work with arrangements, collations, maps and any iterable object in JavaScript.
@@ -32,7 +32,7 @@ If everything goes well, you can now incorporate this library into your project
 
 ## Table of Contents
 
-- [LinqScript](#linqscript)
+- [ecmascript](#ecmascript)
   - [Requirements](#Requirements)
   - [Table of contents](#table-of-contents)
   - [Start](#start)
@@ -53,7 +53,7 @@ If everything goes well, you can now incorporate this library into your project
 
 ## Begin
 
-To start working with linqscript you just have to install the package in its official npm repo
+To start working with ecmascript you just have to install the package in its official npm repo
 with installation commands
 
 ## Installation
@@ -64,13 +64,13 @@ To install the library run the command:
 
 
 ```sh
-$ npm install -S linqscript
+$ npm install -S ecmascript
 ```
 
 or to if you use Yarn:
 
 ```sh
-$ yarn add --dev linqscript
+$ yarn add --dev ecmascript
 ```
 ## Use
 
@@ -93,7 +93,7 @@ type User = {
 Note that this interface has several fields where data of our interest are contained, for example if we want to know which users belong to group "a", we can execute the following example code.
 
 ```ts
-import { from } from "linqscript";
+import { from } from "ecmascript";
 
 type User = {
     id: number,
@@ -145,7 +145,7 @@ Let's look at the following code to understand how select works:
 
 
 ```ts
-import { from } from "linqscript";
+import { from } from "ecmascript";
 
 type User = {
     id: number,
@@ -262,7 +262,7 @@ use the latest features that modern Javascript will give us, such as the for-of 
 for example:
 
 ```ts
-import { from } from "linqscript";
+import { from } from "ecmascript";
 
 const result = from(users).where(x => x.group !== "a"); // exclude all user with group "a"
 
@@ -275,7 +275,7 @@ for (const element of result) {
 ### The 'create()' helper
 
 ```ts
-import { create } from "linqscript";
+import { create } from "ecmascript";
 
  const query = create(next =>{
             next(1);
