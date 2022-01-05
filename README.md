@@ -187,7 +187,7 @@ const result = from(users)
               .select(x => x.id);
 
 // show the result
-console.log(result); // expected [1, 2, 12, 18] array witd id values
+console.log(result); // expected [1, 18] array witd id values
 ```
 
 The "select" method is somewhat analogous to the "map ()" method of the `Array` prototype in JavaScript, because it transforms the query result and basically returns a new query with the previous filters and rules, but with a new type as the query argument.
@@ -332,7 +332,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 * **Oliver Valiente** - [Oliver Valiente](https://github.com/oliver021)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/oliver021/ecmalinq/contributors) who participated in this project.
 
 ## License
 
