@@ -129,16 +129,43 @@ import { InteractiveQuery } from './InteractiveQuery';
         return new Queryable<K>(storage);
     }
 
+    /**
+    * @method where
+    * @description filter data query by predicate
+    * @return IQueryable
+    */
     where(evaluate: Predicate<T>): IQueryable<T>;
+
+    /**
+    * @method where
+    * @description filter data query by predicate
+    * @return IQueryable
+    */
     // tslint:disable-next-line: unified-signatures
     where(evaluate: PredeicateIndex<T>): IQueryable<T>;
 
+    /**
+    * @method where
+    * @description filter data query by predicate
+    * @return IQueryable
+    */
     where(evaluate: any): IQueryable<T> {
         this.whereClosures.push(evaluate);
         return this;
     }
 
+    /**
+    * @method except
+    * @description filter data query by predicate but inverse
+    * @return IQueryable
+    */
     except(evaluate: Predicate<T>): IQueryable<T>;
+
+    /**
+    * @method except
+    * @description filter data query by predicate but inverse
+    * @return IQueryable
+    */
     // tslint:disable-next-line: unified-signatures
     except(evaluate: PredeicateIndex<T>): IQueryable<T>;
 

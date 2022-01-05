@@ -187,10 +187,13 @@ describe('most advanced tests #1', () => {
 
     it('17 - test exact asserts', () =>{
         const query = new Queryable<IFixture2>(bigObject);
+        
+        // data match with same values
         query.exact({
             data: "ss",
             "num": 1
         });
+
         assert.isFalse(query.any(),"expected false");
 
         // second test assertions
@@ -201,6 +204,8 @@ describe('most advanced tests #1', () => {
             support: true,
             num2: 1
         });
+
+        // is true if the query return some result
         assert.isTrue(query2.any(), "expected true");
     });
 
@@ -212,6 +217,8 @@ describe('most advanced tests #1', () => {
             support: true,
             num2: 1
         });
+
+        // excpeted mathc count result
         assert.equal(query2.count(), 4, "expected four length");
     });
 
@@ -240,30 +247,42 @@ describe('most advanced tests #1', () => {
     });
 
     it('20 - test helper filter: "match" with complex case', () =>{
+        
         const query = new Queryable<IFixture2>(bigObject);
+        
         query.match({
             num: 2,
         });
+
         query.match({
             data: "wrap"
         });
+
         assert.equal(query.count(), 1, "test length by 'match' filter helper, equal to 1");
     });
 
     it('21 - test helper filter: "not"', () =>{
+        
         const query = new Queryable<IFixture2>(bigObject);
+
         query.not({
             num: 2,
         });
+        
         query.not({
             data: "wrap"
         });
+        
         assert.equal(query.count(), 3, "test length by 'match' filter helper, equal to 1");
     });
 
     it('22 - test helper filter: "toBeRange"', () =>{
+        
+        // create from sample objects
         const query = new Queryable<IFixture2>(bigObject);
         const result = query.toArrayColumn(x => x.num);
+
+        // tests objects
         assert.isArray(result);
         assert.equal(result.length, 5);
         assert.isTrue(result.includes(91));
@@ -272,9 +291,12 @@ describe('most advanced tests #1', () => {
 
     it('23 - test method: "agregate"', () =>{
         const query = new Queryable<IFixture2>(bigObject);
+
+        // the agregate api test
         const result = query.agregate((x, s) =>{
             return s + x.num;
         }, 0);
+        
         assert.isNumber(result);
     });
 
@@ -342,6 +364,8 @@ describe('most advanced tests #1', () => {
             data: "2",
             num: 1
         }]).count();
+
+        // assert count
         assert.equal(result, 6);
     });
 
@@ -373,8 +397,11 @@ describe('most advanced tests #1', () => {
         }
     ];
 
-    it('34 - test sorting complex: #1', () =>{
+    it('34 - test sorting complex: #1', () => {
+
         const query = new Queryable(sortData);
+        
+        // test sort
         query
         .orderBy(x => x.num)
         .orderBy(x => x.data);
@@ -386,7 +413,7 @@ describe('most advanced tests #1', () => {
         assert.equal(result[2].data, "d");
     })
 
-    it('35 -test \'create()\' helper', () =>{
+    it('35 - test \'create()\' helper', () =>{
         const query = create(next =>{
             next(1);
             next(1);
@@ -412,7 +439,7 @@ describe('most advanced tests #1', () => {
             union([1,2,444]);
         }, Error);
 
-        assert.doesNotThrow(() =>{
+        assert.doesNotThrow(() => {
             for (let index = 0; index < 55; index++) {
                 const totalMax = index + 60;
                 const result = randomNum(2, totalMax);
@@ -422,9 +449,8 @@ describe('most advanced tests #1', () => {
             }
         });
 
+        // bool test
         assert.isArray(toArray(new Queryable(bigObject)[Symbol.iterator]()));
-
-        
     });
 
     it('test async create helper', async () =>{

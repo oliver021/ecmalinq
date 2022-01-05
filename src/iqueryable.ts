@@ -325,7 +325,7 @@ export interface IQueryableControl<T = any, _TFluent =  QueryableDefaultReturn<T
 }
 
 /**
- * this intergace contains the main method to resolve or get serveral types of
+ * This intergace contains the main method to resolve or get serveral types of
  * the results about a query
  * the inetrface contains all related with results of the query and not modify any state
  * @abstract
