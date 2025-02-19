@@ -587,7 +587,7 @@ import { InteractiveQuery } from './InteractiveQuery';
     /**
      * @method
      * @alias [Symbol.iterator]
-     * @description the main query engine and proces of the source
+     * @description the main query engine and process of the source
      */
     * [Symbol.iterator](): Iterator<T, any, undefined> {
          // simples vars
